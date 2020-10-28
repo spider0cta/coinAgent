@@ -89,7 +89,7 @@ TransactionSchema.statics.buy = async function ({ price, amount }) {
   return trans;
 };
 
-// sell via coinbase
+// sell via coinbase or any exchange
 TransactionSchema.statics.sell = async function ({ price, amount }) {
   const Wallet = mongoose.model("Wallet");
   const wallet = await Wallet.findOne({ "balance.type": "BTC" });
