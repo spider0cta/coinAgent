@@ -35,3 +35,19 @@ exports.getBollinger = async function ({
   const outcome = BB.calculate(input);
   return outcome;
 };
+
+exports.showAvailable = function ({ bollinger, prices } = {}) {
+  const bol = bollinger[0];
+  const midrange = bol["middle"];
+  const low = bol["lower"];
+  const midLow = (midrange - low) / 2 + low;
+  console.log(midrange);
+  console.log(low);
+  console.log(midLow);
+
+  const availables = prices.filter((price) => {
+    return price < midrange;
+  });
+
+  console.log(`${availables.length}/${prices.length}`);
+};
