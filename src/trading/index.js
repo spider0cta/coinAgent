@@ -1,6 +1,6 @@
 import Price from "models/price";
 import moment from "moment";
-
+const BB = require("technicalindicators").BollingerBands;
 
 exports.onPrice = async function (price) {
   const start = moment().subtract(1, "days").toDate();
@@ -15,4 +15,23 @@ exports.onPrice = async function (price) {
   console.log(`min: ${dayMin}`);
   console.log(`median: ${dayMedian}`);
   console.log(`current: ${price.spot}`);
+};
+
+exports.getBollinger = async function ({
+  start,
+  period = 1,
+  end = Date(),
+} = {}) {
+  const prices = await Price.getRange({ start, end });
+
+  const total = prices.length - period;
+
+  const input = {
+    period: total,
+    values: prices,
+    stdDev: 2,
+  };
+
+  const outcome = BB.calculate(input);
+  return outcome;
 };
