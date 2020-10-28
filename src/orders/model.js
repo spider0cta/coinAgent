@@ -65,8 +65,34 @@ OrderSchema.methods.closeOrder = async function ({ amount, price, unit }) {
     this.state = "closed";
 
     await this.save();
-    
   } catch (err) {
     console.log(err);
   }
 };
+
+OrderSchema.methods.openOrder = async function ({ amount, price, unit }) {
+  console.log(price);
+  const Transaction = mongoose.model("Transaction");
+
+  try {
+    const transaction = await Transaction.sell({ amount, price });
+    const order = await OrderSchema.create({
+      currency: "BTC",
+      amount: amount,
+      buy: {
+        price: price,
+        date: new Date(),
+        transaction: transaction,
+        unitprice: unit,
+      },
+      state: "open",
+    });
+
+    return order;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const Order = mongoose.model("Order", OrderSchema);
+module.exports = Order;
