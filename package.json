@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/cycl0matic/Cycl0-trader/issues"
   },
-  "homepage": "https://github.com/cycl0matic/Cycl0-trader#readme"
+  "homepage": "https://github.com/cycl0matic/Cycl0-trader#readme",
+  "dependencies": {
+    "coinbase": "^2.0.6",
+    "forever": "^0.15.3",
+    "mongoose": "^4.11.13"
+  }
 }
