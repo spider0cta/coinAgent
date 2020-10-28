@@ -44,3 +44,25 @@ PriceSchema.statics.getMax = async function ({ start, end = Date() } = {}) {
   const max = prices.reduce((max, { spot }) => Math.max(max, spot), 0);
   return max;
 };
+
+PriceSchema.statics.getMin = async function ({ start, end = Date() } = {}) {
+  const prices = await Price.find({ time: { $gte: start, $lte: end } });
+  const min = prices.reduce((min, { spot }) => Math.min(min, spot), Infinity);
+  return min;
+};
+
+PriceSchema.statics.getMedian = async function ({ start, end = Date() } = {}) {
+  const prices = await Price.find({ time: { $gte: start, $lte: end } });
+  const spots = prices.map((price) => price.spot).sort((a, b) => a - b);
+  const length = spots.length;
+  const index = Math.floor(length / 2);
+
+  if (length % 2) {
+    return spots[index];
+  }
+  return (spots[index - 1] + spots[index]) / 2.0;
+};
+
+const Price = mongoose.model("Price", PriceSchema);
+
+module.exports = Price;
