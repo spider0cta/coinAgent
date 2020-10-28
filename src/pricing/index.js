@@ -34,7 +34,17 @@ module.exports = {
       const result = results[i];
       dict[order] = result;
     }
-    return dict;
+
+    const data = {
+      base: dict["buy"]["base"],
+      currency: dict["buy"]["currency"],
+      spot: dict["spot"]["amount"],
+      buy: dict["buy"]["amount"],
+      sell: dict["sell"]["amount"],
+      time: Date(),
+    };
+
+    return data;
   },
   getSpotPrice: async () =>
     new Promise((resolve, reject) => {

@@ -7,34 +7,25 @@ const pricing = require("../pricing");
 const database = require("../database");
 const util = require("util");
 const setTimeoutPromise = util.promisify(setTimeout);
+const Price = require("../models/price");
+const Trading = require("../trading");
 
 const mainLoop = async () => {
   const time = 10 * 1000;
   try {
-    // getting buy price only
-    // const buyPrice = await pricing.getBuyPrice();
-    // console.log(`buy: ${buyPrice.amount}`);
-
-    // getting sellPrice only
-    // const sellPrice = await pricing.getSellPrice();
-    // console.log(`sell: ${sellPrice.amount}`);
-
-    // getting spot price only
-    // const spot = await pricing.getSpotPrice();
-    // console.log(`spot: ${spot.amount}`);
-
     const prices = await pricing.getPrices();
+    const price = await Price.create(prices);
     console.log(prices);
+    await Trading.onPrice(price);
   } catch (error) {
     console.log(error);
   }
-  await setTimeoutPromise(time);
-  mainLoop();
 };
 
 module.exports = {
   start: async () => {
     await database.connect();
+    setInterval(mainLoop, time);
     mainLoop();
   },
 };
