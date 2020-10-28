@@ -3,20 +3,25 @@ import { get } from "../configuration";
 import coinbase from "coinbase";
 import { Client } from "coinbase";
 
+const pricing = require("../pricing");
+const database = require("../database");
 const util = require("util");
 const setTimeoutPromise = util.promisify(setTimeout);
 
 const mainLoop = async () => {
   const time = 10 * 1000;
   try {
-    const buyPrice = await pricing.getBuyPrice();
-    console.log(`buy: ${buyPrice.amount}`);
+    // getting buy price only
+    // const buyPrice = await pricing.getBuyPrice();
+    // console.log(`buy: ${buyPrice.amount}`);
 
-    const sellPrice = await pricing.getSellPrice();
-    console.log(`sell: ${sellPrice.amount}`);
+    // getting sellPrice only
+    // const sellPrice = await pricing.getSellPrice();
+    // console.log(`sell: ${sellPrice.amount}`);
 
-    const spot = await pricing.getSpotPrice();
-    console.log(`spot: ${spot.amount}`);
+    // getting spot price only
+    // const spot = await pricing.getSpotPrice();
+    // console.log(`spot: ${spot.amount}`);
 
     const prices = await pricing.getPrices();
     console.log(prices);
