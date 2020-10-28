@@ -32,6 +32,13 @@ const PriceSchema = new Schema({
   },
 });
 
+// getting range
+
+PriceSchema.statics.getRange = async function ({ start, end = Date() } = {}) {
+  const prices = await Price.find({ time: { $gte: start, $lte: end } });
+  return prices.map((price) => price.spot);
+};
+
 PriceSchema.statics.getMean = async function ({ start, end = Date() } = {}) {
   const prices = await Price.find({ time: { $gte: start, $lte: end } });
   const count = prices.length;

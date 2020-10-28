@@ -1,6 +1,7 @@
 import Price from "models/price";
 import moment from "moment";
 
+
 exports.onPrice = async function (price) {
   const start = moment().subtract(1, "days").toDate();
   const dayAverage = await Price.getMean({ start });

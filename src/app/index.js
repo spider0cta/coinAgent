@@ -31,5 +31,8 @@ module.exports = {
     const end = moment().subtract(3, "days").toDate();
     const next6 = moment().subtract(3, "days").add(1, "hours").toDate();
     const period = 1;
+    const bollinger = await Trading.getBollinger({ start, period, end });
+    const prices = await Price.getRange({ start: end, end: next6 });
+    Trading.showAvailable({ bollinger, prices });
   },
 };
