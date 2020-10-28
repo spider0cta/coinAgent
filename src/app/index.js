@@ -6,12 +6,14 @@ import { Client } from "coinbase";
 const pricing = require("../pricing");
 const database = require("../database");
 const util = require("util");
-const setTimeoutPromise = util.promisify(setTimeout);
 const Price = require("../models/price");
 const Trading = require("../trading");
+const moment = require("moment");
+
+const setTimeoutPromise = util.promisify(setTimeout);
+const time = 10 * 1000;
 
 const mainLoop = async () => {
-  const time = 10 * 1000;
   try {
     const prices = await pricing.getPrices();
     const price = await Price.create(prices);
@@ -25,7 +27,9 @@ const mainLoop = async () => {
 module.exports = {
   start: async () => {
     await database.connect();
-    setInterval(mainLoop, time);
-    mainLoop();
+    const start = moment().subtract(3, "days").subtract(2, "hours").toDate();
+    const end = moment().subtract(3, "days").toDate();
+    const next6 = moment().subtract(3, "days").add(1, "hours").toDate();
+    const period = 1;
   },
 };
