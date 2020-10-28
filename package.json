@@ -1,0 +1,19 @@
+{
+  "name": "cycl0-trader",
+  "version": "1.0.0",
+  "description": "cryptocurrency trading bot that supports Ether, Bitcoin & Litecoin currencies",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cycl0matic/Cycl0-trader.git"
+  },
+  "author": "\"Muhammad Ahmed\"",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cycl0matic/Cycl0-trader/issues"
+  },
+  "homepage": "https://github.com/cycl0matic/Cycl0-trader#readme"
+}
