@@ -1,5 +1,7 @@
+const config = require("../configuration");
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+const moment = require("moment");
 
 const PriceSchema = new Schema({
   base: {
@@ -32,6 +34,17 @@ const PriceSchema = new Schema({
   },
 });
 
+const priceBetween = async ({ start, end } = {}) => {
+  const currency = config.get("CURRENCY");
+  return Price.find({
+    currency,
+    time: {
+      $gte: start,
+      $lte: end,
+    },
+  });
+};
+
 // getting range
 
 PriceSchema.statics.getRange = async function ({ start, end = Date() } = {}) {
@@ -44,6 +57,65 @@ PriceSchema.statics.getMean = async function ({ start, end = Date() } = {}) {
   const count = prices.length;
   const average = prices.reduce((sum, price) => sum + price.spot, 0) / count;
   return average;
+};
+
+const getMeanInterval = async function ({ start, end, interval, mod }) {
+  const startMoment = moment(start);
+  const endMoment = moment(end);
+  let current = startMoment;
+  const intervals = [];
+
+  while (current.isBefore(endMoment)) {
+    const previous = current.toDate();
+    current = current.add(interval, mod);
+
+    intervals.push({
+      start: previous,
+      end: current.toDate(),
+    });
+  }
+
+  const results = await Promise.all(
+    intervals.map((start, end) => {
+      return Price.getMean({ start, end });
+    })
+  );
+
+  const means = results.filter((price) => {
+    return !isNaN(price);
+  });
+
+  return means;
+};
+
+// getMinutelyMean method
+PriceSchema.statics.getMinutelyMean = async function ({
+  start,
+  end = new Date(),
+  interval = 5,
+} = {}) {
+  return getMeanInterval({
+    start,
+    end,
+    interval,
+    mod: "minute",
+    Price: this,
+  });
+};
+
+// getHouerlyMean method
+PriceSchema.statics.getHourlyMean = async function ({
+  start,
+  end = new Date(),
+  interval = 1,
+} = {}) {
+  return getMeanInterval({
+    start,
+    end,
+    interval,
+    mod: "Hour",
+    Price: this,
+  });
 };
 
 PriceSchema.statics.getMax = async function ({ start, end = Date() } = {}) {
