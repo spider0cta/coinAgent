@@ -70,7 +70,7 @@ TransactionSchema.statics.sellQuote = function ({ total }) {
 TransactionSchema.statics.buyFromExchange = function ({ price, amount }) {
   return new Promise((resolve, reject) =>{
     const Wallet = mongoose.model("Wallet");
-    const wallet = await Wallet.findOne({ "balance.currency": "BTC" });
+    const wallet = await Wallet.findOne({ "balance.currency": "BTC" ,commit :true });
     client.getAccount(wallet.coinbaseId, (err,account)=>{})
      if(err){
        return reject(err)
