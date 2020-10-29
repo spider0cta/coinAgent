@@ -65,7 +65,29 @@ TransactionSchema.statics.sellQuote = function ({ total }) {
   });
 };
 
-// buy from coinbase or an exchange
+// buy from exchange
+
+TransactionSchema.statics.buyFromExchange = function ({ price, amount }) {
+  return new Promise((resolve, reject) =>{
+    const Wallet = mongoose.model("Wallet");
+    const wallet = await Wallet.findOne({ "balance.currency": "BTC" });
+    client.getAccount(wallet.coinbaseId, (err,account)=>{})
+     if(err){
+       return reject(err)
+     }
+
+     account.buy({total :amount, "currency": "BTC"}, (err, tx) =>{
+       if(err){return reject(err)}
+       resolve({
+         amount : tx.amount,
+         cost : tx.total
+       })
+     })
+  })
+  
+};
+
+// buy from coinbase
 TransactionSchema.statics.buy = async function ({ price, amount }) {
   const Wallet = mongoose.model("Wallet");
   const wallet = await Wallet.findOne({ "balance.currency": "GBP" });
@@ -112,3 +134,6 @@ TransactionSchema.statics.sell = async function ({ price, amount }) {
 
   return trans;
 };
+
+const Transaction = mongooe.model("Transaction", TransactionSchema);
+module.exports = Transaction;
