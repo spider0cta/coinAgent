@@ -83,6 +83,12 @@ TransactionSchema.statics.buyFromExchange = function ({ price, amount }) {
          cost : tx.total
        })
      })
+     
+     if(tx.total.amount  >= amount){
+       tx.commit(function(error, response){
+          console.log(response)
+       })
+     }
   })
   
 };
